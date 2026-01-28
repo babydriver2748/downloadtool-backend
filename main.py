@@ -98,6 +98,7 @@ def download_video_background(url: str, job_id: str, format_id: str):
         'no_warnings': True,
         'overwrites': True,
         'progress_hooks': [hook_wrapper],
+        'cookiefile': 'cookies.txt',  # <--- [UPDATED] Uses cookies to bypass login
     }
 
     if "mp3" in format_id:
@@ -183,7 +184,12 @@ def download_file(job_id: str, background_tasks: BackgroundTasks):
 async def analyze_video(request: AnalyzeRequest):
     print(f"Analyzing: {request.url}")
     try:
-        ydl_opts = {'quiet': True, 'no_warnings': True}
+        # [UPDATED] Added cookies here as well
+        ydl_opts = {
+            'quiet': True, 
+            'no_warnings': True,
+            'cookiefile': 'cookies.txt' 
+        }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(request.url, download=False)
             
